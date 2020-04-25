@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  init:
+    build:
+      context: ./Docker/php
+    volumes:
+      - ./:/app
+    command: "sh /app/bin/install.sh"

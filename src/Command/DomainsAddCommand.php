@@ -33,7 +33,7 @@ class DomainsAddCommand extends Command
         $this
             ->setDescription('Add a new domain to watch')
             ->addArgument('domain', InputArgument::REQUIRED, 'The domain to add')
-            ->addArgument('owned', InputArgument::REQUIRED, 'Mention if the domain is owned')
+            ->addArgument('owned', InputArgument::OPTIONAL, 'Mention if the domain is owned', 0)
         ;
     }
 

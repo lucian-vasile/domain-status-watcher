@@ -53,9 +53,14 @@ final class VerifyDomainHandler implements MessageHandlerInterface
         $nowDate = new \DateTime();
         $expiresDate = new \DateTime($result->expires);
         
+        $status = $result->status;
+        if (is_array ($result->status)) {
+            $status = implode (',', $result->status);
+        }
+        
         $domain->setCheckedAt ($nowDate)
             ->setRawWhoisResponse ($result->toArray ())
-            ->setCurrentStatus ($result->status);
+            ->setCurrentStatus ($status);
         
         if ($result->expires) {
             $domain->setExpiresAt ($expiresDate);
