@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  fba-check-orders:
+    build:
+      context: ./Docker/php
+    volumes:
+      - ./:/app
+    command: "php /app/bin/console domains:watch"
+    depends_on:
+      - queue
+
+  queue:
+    build:
+      context: ./Docker/php
+    volumes:
+      - ./:/app
+    restart: "always"
+    networks:
+      - default
+      - traefik
+    command: "php /app/bin/console messenger:consume async -vv --limit=5"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis
+    volumes:
+      - redis_data:/data
+    restart: "always"
+
+networks:
+  traefik:
+    external:
+      name: $TRAEFIK_NETWORK
+
+volumes:
+  redis_data:
