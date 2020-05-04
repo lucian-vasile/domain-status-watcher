@@ -29,8 +29,16 @@ It monitors domain statuses and notifies via Telegram when the domain is expired
 3. Create your bot using telegram's BotFather: [t.me/BotFather](https://t.me/BotFather)
 3. Update bot_id in your .env file
 
-## Running
+## Usage
 
-Add a new domain to monitor:
+#### Add a new domain to monitor:
 
 `docker-compose exec queue php /app/bin/console domains:add example.com`
+
+#### List monitored domains:
+
+`docker-compose exec queue php /app/bin/console domains:list`
+
+#### Remove a monitored domain:
+
+`docker-compose exec queue php /app/bin/console domains:rm {id|domain}`

@@ -59,4 +59,13 @@ class DomainsRepository extends ServiceEntityRepository
             ->getQuery ()
             ->getResult ();
     }
+    
+    public function findOneByIdOrDomain($idOrDomain) {
+        return $this->createQueryBuilder ('d')
+            ->orWhere ('d.id = :idOrDomain')
+            ->orWhere ('d.domain = :idOrDomain')
+            ->setParameter ('idOrDomain', $idOrDomain)
+            ->getQuery ()
+            ->getOneOrNullResult ();
+    }
 }
