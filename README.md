@@ -26,8 +26,8 @@ It monitors domain statuses and notifies via Telegram when the domain is expired
 
 1. Make sure you have a Telegram account.
 2. Add What's my ID bot to telegram: [t.me/my_id_bot](https://t.me/my_id_bot)
-3. Get that value and replace `channel_id` in your .env
-4. Add DomWatchBot to telegram: [t.me/DomWatchBot](https://t.me/DomWatchBot)
+3. Create your bot using telegram's BotFather: [t.me/BotFather](https://t.me/BotFather)
+3. Update bot_id in your .env file
 
 ## Running
 
