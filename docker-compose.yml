@@ -1,16 +1,6 @@
 version: '3'
 
 services:
-
-  fba-check-orders:
-    build:
-      context: ./Docker/php
-    volumes:
-      - ./:/app
-    command: "php /app/bin/console domains:watch"
-    depends_on:
-      - queue
-
   queue:
     build:
       context: ./Docker/php
@@ -19,7 +9,7 @@ services:
     restart: "always"
     networks:
       - default
-    command: "php /app/bin/console messenger:consume async -vv --limit=5"
+    command: "php /app/bin/console messenger:consume async -vv --memory-limit=120M"
     depends_on:
       - redis
 
