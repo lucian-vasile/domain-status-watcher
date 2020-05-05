@@ -62,6 +62,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
          */
         $domain = $this->entityManager->getRepository (Domains::class)->find ($message->getDomainId ());
         if (!$domain) {
+            $this->bus->dispatch (new NotifyDomainStatus("Domain #{$message->getDomainId ()} has been deleted. Not watching"));
             return;
         }
         $this->logger->info ("Domain #{$message->getDomainId ()} fetched: {$domain->getDomain ()}");
