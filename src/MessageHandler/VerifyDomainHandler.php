@@ -14,11 +14,25 @@ use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
 use Symfony\Component\Validator\Constraints\Date;
 
+/**
+ * Class VerifyDomainHandler
+ *
+ * @package App\MessageHandler
+ */
 final class VerifyDomainHandler implements MessageHandlerInterface
 {
     
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
+    /**
+     * @var MessageBusInterface
+     */
     private $bus;
     
     /**
@@ -35,12 +49,21 @@ final class VerifyDomainHandler implements MessageHandlerInterface
         $this->entityManager = $entityManager;
         $this->logger->info ("Got to the VerifyDomainHandler constructor");
     }
+    
+    /**
+     * @param VerifyDomain $message
+     *
+     * @throws \Novutec\WhoisParser\Exception\NoQueryException
+     */
     public function __invoke(VerifyDomain $message)
     {
         /**
          * @var Domains $domain;
          */
         $domain = $this->entityManager->getRepository (Domains::class)->find ($message->getDomainId ());
+        if (!$domain) {
+            return;
+        }
         $this->logger->info ("Domain #{$message->getDomainId ()} fetched: {$domain->getDomain ()}");
     
         $whois = new Parser();
