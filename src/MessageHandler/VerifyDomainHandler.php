@@ -99,6 +99,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
                 $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
                     new DelayStamp(300000)
                 ]);
+                return;
             }
     
             // expires in the future, check then
@@ -107,6 +108,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
                 $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
                     new DelayStamp($diff)
                 ]);
+                return;
             }
         }
         
@@ -117,7 +119,13 @@ final class VerifyDomainHandler implements MessageHandlerInterface
             $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
                 new DelayStamp(86400000)
             ]);
+            return;
         }
+        
+        // if all other checks fail recheck in one hour
+        $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
+            new DelayStamp(3600000)
+        ]);
         
     }
 }
