@@ -62,17 +62,27 @@ final class VerifyDomainHandler implements MessageHandlerInterface
          */
         $domain = $this->entityManager->getRepository (Domains::class)->find ($message->getDomainId ());
         if (!$domain) {
+            $this->logger->info ("Non existent domain. Probably deleted. Not watching anymore.", ['id' => $message->getDomainId ()]);
             $this->bus->dispatch (new NotifyDomainStatus("Domain #{$message->getDomainId ()} has been deleted. Not watching"));
             return;
         }
-        $this->logger->info ("Domain #{$message->getDomainId ()} fetched: {$domain->getDomain ()}");
     
         $whois = new Parser();
         
-        /**
-         * @var Result $result
-         */
-        $result = $whois->lookup ($domain->getDomain ());
+        try {
+            /**
+             * @var Result $result
+             */
+            $result = $whois->lookup ($domain->getDomain ());
+        } catch (\Exception $er) {
+            // if this fails recheck in about an hour
+            $this->logger->error ('Error looking up domain.', ['domain' => $domain->getDomain (), 'error' => $er->getMessage ()]);
+            $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
+                new DelayStamp(rand (1800000, 3600000))
+            ]);
+            return;
+        }
+        $this->logger->info ("Domain fetched.", ['domain' => $domain->getDomain ()]);
         
         $nowDate = new \DateTime();
         $expiresDate = new \DateTime($result->expires);
@@ -97,8 +107,9 @@ final class VerifyDomainHandler implements MessageHandlerInterface
             // expires in the past, soon to be unregistered, check every 5 minutes
             if ($expiresDate <= $nowDate) {
                 $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
-                    new DelayStamp(300000)
+                    new DelayStamp(rand (100000, 300000))
                 ]);
+                $this->logger->info ("Expires in the past but still registered. Checking every few minutes.", ['domain' => $domain->getDomain ()]);
                 return;
             }
     
@@ -108,6 +119,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
                 $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
                     new DelayStamp($diff)
                 ]);
+                $this->logger->info ("Expires in the future. Setting new check date.", ['domain' => $domain->getDomain (), 'check-date' => $expiresDate->format ('Y-m-d')]);
                 return;
             }
         }
@@ -119,6 +131,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
             $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
                 new DelayStamp(86400000)
             ]);
+            $this->logger->info ('This domain is not registered. Re-check every 24 hours.', ['domain' => $domain->getDomain ()]);
             return;
         }
         
@@ -126,6 +139,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
         $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
             new DelayStamp(3600000)
         ]);
+        $this->logger->warning ('Something went wrong and non of the conditions were met. Re-checking in an hour.', ['domain' => $domain->getDomain ()]);
         
     }
 }
