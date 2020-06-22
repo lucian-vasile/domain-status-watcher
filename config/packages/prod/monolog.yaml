@@ -1,0 +1,7 @@
+monolog:
+    handlers:
+        main:
+            type: rotating_file
+            path: "%kernel.logs_dir%/watcher.log"
+            level: info
+            max_files: 30
