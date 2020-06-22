@@ -102,6 +102,9 @@
     "mcs/amazon-mws": {
         "version": "0.1.26"
     },
+    "monolog/monolog": {
+        "version": "2.1.0"
+    },
     "nikic/php-parser": {
         "version": "v4.4.0"
     },
@@ -254,6 +257,24 @@
     },
     "symfony/mime": {
         "version": "v5.0.7"
+    },
+    "symfony/monolog-bridge": {
+        "version": "v5.0.10"
+    },
+    "symfony/monolog-bundle": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "d7249f7d560f6736115eee1851d02a65826f0a56"
+        },
+        "files": [
+            "config/packages/dev/monolog.yaml",
+            "config/packages/prod/deprecations.yaml",
+            "config/packages/prod/monolog.yaml",
+            "config/packages/test/monolog.yaml"
+        ]
     },
     "symfony/notifier": {
         "version": "5.0",

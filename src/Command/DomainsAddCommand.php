@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\Domains;
 use App\Message\VerifyDomain;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,11 +21,20 @@ class DomainsAddCommand extends Command
 
     private $entityManager;
     private $bus;
+    private $logger;
     
-    public function __construct (EntityManagerInterface $entityManager, MessageBusInterface $bus)
+    /**
+     * DomainsAddCommand constructor.
+     *
+     * @param EntityManagerInterface $entityManager
+     * @param MessageBusInterface $bus
+     * @param LoggerInterface $logger
+     */
+    public function __construct (EntityManagerInterface $entityManager, MessageBusInterface $bus, LoggerInterface $logger)
     {
         $this->entityManager = $entityManager;
         $this->bus = $bus;
+        $this->logger = $logger;
         parent::__construct ();
     }
     
@@ -48,11 +58,12 @@ class DomainsAddCommand extends Command
         $domainObject->setIsOwned ($owned);
         $this->entityManager->persist ($domainObject);
         $this->entityManager->flush ();
+        $this->logger->info ('New domain added to the database.', ['domain' => $domain]);
     
         $this->bus->dispatch (new VerifyDomain($domainObject->getId()));
-
+        $this->logger->info ('New domain added to the watch.', ['domain' => $domain]);
+    
         $io->success("The domain <$domain> has been successfully added!");
-
         return 0;
     }
 }
