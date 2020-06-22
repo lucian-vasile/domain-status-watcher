@@ -58,10 +58,10 @@ class DomainsAddCommand extends Command
         $domainObject->setIsOwned ($owned);
         $this->entityManager->persist ($domainObject);
         $this->entityManager->flush ();
-        $this->logger->info ('New domain added to the database.'. ['domain' => $domain]);
+        $this->logger->info ('New domain added to the database.', ['domain' => $domain]);
     
         $this->bus->dispatch (new VerifyDomain($domainObject->getId()));
-        $this->logger->info ('New domain added to the watch.'. ['domain' => $domain]);
+        $this->logger->info ('New domain added to the watch.', ['domain' => $domain]);
     
         $io->success("The domain <$domain> has been successfully added!");
         return 0;
