@@ -28,7 +28,7 @@ final class NotifyDomainStatusHandler implements MessageHandlerInterface
     public function __construct (NotifierInterface $notifier, LoggerInterface $logger)
     {
         $this->notifier = $notifier;
-        $this->logger = $logger
+        $this->logger = $logger;
     }
     
     public function __invoke(NotifyDomainStatus $message)
