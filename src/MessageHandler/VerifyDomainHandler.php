@@ -53,7 +53,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
     /**
      * @param VerifyDomain $message
      *
-     * @throws \Novutec\WhoisParser\Exception\NoQueryException
+     * @throws \Exception
      */
     public function __invoke(VerifyDomain $message)
     {
@@ -82,6 +82,19 @@ final class VerifyDomainHandler implements MessageHandlerInterface
             ]);
             return;
         }
+    
+        if ($result->exception) {
+            // didn't manage to connect to rotld
+            $this->logger->warning ('Failed to connect to registrar. Check again in about an hour.', [
+                'domain' => $domain->getDomain (),
+                'message' => $result->exception
+            ]);
+            $this->bus->dispatch (new VerifyDomain($message->getDomainId ()), [
+                new DelayStamp(rand (1800000, 3600000))
+            ]);
+            return;
+        }
+        
         $this->logger->info ("Domain fetched.", ['domain' => $domain->getDomain ()]);
         
         $nowDate = new \DateTime();
