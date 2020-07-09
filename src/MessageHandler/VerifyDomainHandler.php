@@ -12,7 +12,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Messenger\Stamp\DelayStamp;
-use Symfony\Component\Validator\Constraints\Date;
 
 /**
  * Class VerifyDomainHandler
@@ -66,7 +65,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
             $this->bus->dispatch (new NotifyDomainStatus("Domain #{$message->getDomainId ()} has been deleted. Not watching"));
             return;
         }
-    
+        $this->logger->info ("Starting lookup for domain.", ['id' => $message->getDomainId (), 'domain' => $domain->getDomain ()]);
         $whois = new Parser();
         
         try {
@@ -84,7 +83,7 @@ final class VerifyDomainHandler implements MessageHandlerInterface
         }
     
         if ($result->exception) {
-            // didn't manage to connect to rotld
+            // didn't manage to connect to whois server
             $this->logger->warning ('Failed to connect to registrar. Check again in about an hour.', [
                 'domain' => $domain->getDomain (),
                 'message' => $result->exception
