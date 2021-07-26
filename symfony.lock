@@ -153,6 +153,9 @@
     "spatie/array-to-xml": {
         "version": "2.11.2"
     },
+    "symfony/amqp-messenger": {
+        "version": "v5.1.11"
+    },
     "symfony/cache": {
         "version": "v5.0.7"
     },
@@ -183,6 +186,9 @@
     },
     "symfony/doctrine-bridge": {
         "version": "v5.0.7"
+    },
+    "symfony/doctrine-messenger": {
+        "version": "v5.1.11"
     },
     "symfony/dotenv": {
         "version": "v5.0.7"
@@ -267,9 +273,6 @@
             "./config/packages/messenger.yaml"
         ]
     },
-    "symfony/mime": {
-        "version": "v5.0.7"
-    },
     "symfony/monolog-bridge": {
         "version": "v5.0.10"
     },
@@ -303,6 +306,9 @@
     "symfony/orm-pack": {
         "version": "v1.0.8"
     },
+    "symfony/polyfill-intl-grapheme": {
+        "version": "v1.23.0"
+    },
     "symfony/polyfill-intl-idn": {
         "version": "v1.15.0"
     },
@@ -317,6 +323,9 @@
     },
     "symfony/polyfill-php80": {
         "version": "v1.23.0"
+    },
+    "symfony/redis-messenger": {
+        "version": "v5.1.11"
     },
     "symfony/routing": {
         "version": "4.2",
@@ -337,6 +346,9 @@
     },
     "symfony/stopwatch": {
         "version": "v5.0.7"
+    },
+    "symfony/string": {
+        "version": "v5.1.11"
     },
     "symfony/telegram-notifier": {
         "version": "5.0",
