@@ -93,6 +93,9 @@
     "guzzlehttp/psr7": {
         "version": "1.6.1"
     },
+    "io-developer/php-whois": {
+        "version": "4.1.2"
+    },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -116,12 +119,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.4.0"
-    },
-    "novutec/domainparser": {
-        "version": "2.0.10"
-    },
-    "novutec/whoisparser": {
-        "version": "3.2.12"
     },
     "ocramius/package-versions": {
         "version": "1.5.1"
@@ -383,6 +380,9 @@
     },
     "symfony/yaml": {
         "version": "v5.0.7"
+    },
+    "true/punycode": {
+        "version": "v2.1.1"
     },
     "webimpress/safe-writer": {
         "version": "2.0.1"
